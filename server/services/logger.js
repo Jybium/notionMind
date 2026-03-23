@@ -20,29 +20,12 @@ const consoleFormat = winston.format.combine(
   )
 );
 
-// Configure Transports
+// Only use Console logging for production/serverless compatibility
 const transports = [
   new winston.transports.Console({
     format: consoleFormat
   })
 ];
-
-// Only use file logging if not in a serverless environment (Vercel)
-if (!process.env.VERCEL) {
-  transports.push(
-    new winston.transports.File({ 
-      filename: path.join(LOG_DIR, 'error.log'), 
-      level: 'error',
-      maxsize: 5242880, // 5MB
-      maxFiles: 5,
-    }),
-    new winston.transports.File({ 
-      filename: path.join(LOG_DIR, 'combined.log'),
-      maxsize: 5242880, // 5MB
-      maxFiles: 5,
-    })
-  );
-}
 
 const logger = winston.createLogger({
   level: process.env.LOG_LEVEL || 'info',
