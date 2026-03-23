@@ -76,8 +76,7 @@ export async function searchNotion(query, token) {
       sort: { direction: 'descending', timestamp: 'last_edited_time' },
       page_size: 10
     });
-
-    return response.results.map(p => {
+    const pages = response.results.map(p => {
       const titleKey = Object.keys(p.properties).find(k => p.properties[k].type === 'title');
       const titleStr = titleKey && p.properties[titleKey].title?.length 
         ? p.properties[titleKey].title.map(t => t.plain_text).join("") 
@@ -85,9 +84,11 @@ export async function searchNotion(query, token) {
         
       return {
         id: p.id,
-        title: titleStr
+        title: titleStr,
+        last_edited_time: p.last_edited_time
       };
     });
+    return pages;
   } catch (err) {
     logger.error(`searchNotion Error [${query}]:`, err);
     throw new Error(`Failed to search Notion: ${err.message}`);

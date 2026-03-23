@@ -8,14 +8,17 @@ import {
   Mail,
   Calendar,
   Sun,
-  Trash2
+  Trash2,
+  Clock, // Added Clock icon
+  Archive // Added Archive icon
 } from 'lucide-react';
 const PROMPTS = [
   { icon: CheckCircle, text: 'Show open Notion tasks' },
   { icon: AlertTriangle, text: 'Find overdue tasks' },
   { icon: BarChart, text: 'Full project briefing' },
-  { icon: Plus, text: 'Create meeting notes' },
-  { icon: Sun, text: 'Run Daily Notion Review' },
+  { icon: Clock, text: 'Run Daily Notion Review', id: 'daily-review' }, // Modified existing entry
+  { icon: Archive, text: 'Discover Forgotten Pages', id: 'forgotten-pages' }, // Added new entry
+  { icon: Plus, text: 'Create meeting notes', id: 'meeting-notes' }, // Modified existing entry
 ];
 import Skeleton from './Skeleton';
 

@@ -235,6 +235,9 @@ export default function App() {
             if (text.toLowerCase().includes('daily notion review')) {
               setAgentGoal('Perform a comprehensive daily review of my Notion workspace. Find all pages edited in the last 24 hours and identify any overdue tasks.');
               setMode('agent');
+            } else if (text.toLowerCase().includes('forgotten pages')) {
+              setAgentGoal('Analyze my Notion workspace to find "Forgotten Pages" — documents that haven\'t been edited in over 30 days but might still be important. Present them as a list for me to review or archive.');
+              setMode('agent');
             } else {
               setMode('chat'); 
               setQuickPrompt(text); 
