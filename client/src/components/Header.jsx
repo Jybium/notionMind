@@ -198,9 +198,9 @@ export default function Header({
           <div
             className="model-selector-pill"
             onClick={() => setModelProvider(modelProvider === 'claude' ? 'gemini' : 'claude')}
-            title={`Current Model: ${modelProvider === 'claude' ? 'Claude 3.5' : 'Gemini 1.5'}`}
+            title={`Current Model: ${modelProvider === 'claude' ? 'Claude 3.5' : 'Gemini 2.5'}`}
           >
-            <div className={` ${modelProvider}`}>
+            <div className={`${modelProvider}`}>
               {modelProvider === 'claude' ? <Zap size={11} /> : <span>🧠</span>}
             </div>
             <span className="model-name">{modelProvider === 'claude' ? 'Claude' : 'Gemini'}</span>
