@@ -17,17 +17,24 @@ import './AgentView.css';
 const SESSION_ID = "ag-" + Math.random().toString(36).slice(2, 9);
 
 const EXAMPLE_GOALS = [
-  { text: "Find recent emails about 'Project X' and summarize them", icon: Bot },
-  { text: "Check my calendar for tomorrow and create a Notion summary", icon: Calendar },
-  { text: "Find the latest report in Notion and email it to me", icon: Layers }
+  { text: "Find all pages edited in the last 24 hours and summarize changes", icon: Bot },
+  { text: "Find all overdue tasks across my Notion workspace", icon: AlertCircle },
+  { text: "Look at my project databases and give me a high-level briefing", icon: Lightbulb }
 ];
 
-export default function AgentView({ workspaceId, userId, modelProvider, showToast }) {
-  const [goal, setGoal] = useState('');
+export default function AgentView({ workspaceId, userId, modelProvider, showToast, prefilledGoal, onGoalUsed }) {
+  const [goal, setGoal] = useState(prefilledGoal || '');
   const [isRunning, setIsRunning] = useState(false);
   const [trace, setTrace] = useState([]);
   const [result, setResult] = useState('');
   const [error, setError] = useState('');
+
+  React.useEffect(() => {
+    if (prefilledGoal) {
+      runAgent(prefilledGoal);
+      if (onGoalUsed) onGoalUsed();
+    }
+  }, [prefilledGoal]);
 
   const runAgent = async (goalText) => {
     const g = (goalText || goal).trim();

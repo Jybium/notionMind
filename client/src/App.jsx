@@ -21,8 +21,9 @@ export default function App() {
   const [useGmail, setUseGmail] = useState(false);
   const [useCalendar, setUseCalendar] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
-  const [sidebarOpen, setSidebarOpen] = useState(false); // New state
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [quickPrompt, setQuickPrompt] = useState('');
+  const [agentGoal, setAgentGoal] = useState('');
   const [toast, setToast] = useState(null);
   const [isSessionsLoading, setIsSessionsLoading] = useState(false);
   const [selectedDoc, setSelectedDoc] = useState(null);
@@ -64,23 +65,39 @@ export default function App() {
     if (uId) {
       localStorage.setItem('nm_user_id', uId);
       setUserId(uId);
+      params.delete('userId');
     }
     if (sId) {
       setSessionId(sId);
       localStorage.setItem('nm_session_id', sId);
+      params.delete('session');
     }
-    if (m) setMode(m);
-    if (mp) setModelProvider(mp);
+    if (m) {
+      setMode(m);
+      params.delete('mode');
+    }
+    if (mp) {
+      setModelProvider(mp);
+      params.delete('model');
+    }
     if (d) {
       const savedDoc = localStorage.getItem(`doc_${d}`);
       if (savedDoc) setSelectedDoc(JSON.parse(savedDoc));
       else setSelectedDoc({ id: d, title: 'Loading...' });
+      params.delete('doc');
+    }
+
+    // Clean up the URL if we consumed any parameters
+    if (uId || sId || m || mp || d) {
+      const newUrl = window.location.pathname + (params.toString() ? '?' + params.toString() : '');
+      window.history.replaceState({}, '', newUrl);
     }
   }, []);
 
   // Sync state to URL
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
+    params.delete('userId');
     if (mode) params.set('mode', mode);
     if (sessionId && mode === 'chat') params.set('session', sessionId);
     else params.delete('session');
@@ -93,9 +110,10 @@ export default function App() {
       params.delete('doc');
     }
 
-    const newUrl = `${window.location.pathname}?${params.toString()}`;
+    const queryString = params.toString();
+    const newUrl = window.location.pathname + (queryString ? '?' + queryString : '');
     window.history.replaceState({}, '', newUrl);
-  }, [mode, sessionId, modelProvider, selectedDoc]);
+  }, [mode, sessionId, modelProvider, selectedDoc, workspaceId]);
 
   useEffect(() => {
     if (userId) {
@@ -213,7 +231,16 @@ export default function App() {
           onSessionSelect={(id) => { changeSession(id); setSidebarOpen(false); }}
           onNewSession={() => { newSession(); setSidebarOpen(false); }}
           onSessionDelete={deleteSession}
-          onPromptSelect={(text) => { setMode('chat'); setQuickPrompt(text); setSidebarOpen(false); }} 
+          onPromptSelect={(text) => { 
+            if (text.toLowerCase().includes('daily notion review')) {
+              setAgentGoal('Perform a comprehensive daily review of my Notion workspace. Find all pages edited in the last 24 hours and identify any overdue tasks.');
+              setMode('agent');
+            } else {
+              setMode('chat'); 
+              setQuickPrompt(text); 
+            }
+            setSidebarOpen(false); 
+          }} 
         />
 
         <div className="main-content">
@@ -262,6 +289,8 @@ export default function App() {
               userId={userId}
               modelProvider={modelProvider}
               showToast={showToast}
+              prefilledGoal={agentGoal}
+              onGoalUsed={() => setAgentGoal('')}
             />
           )}
         </div>

@@ -388,7 +388,8 @@
   color: #fff;
 }
  
-.model-indicator.gemini {
+.model-indicator.gemini,
+.model-indicator.gemini-lite {
   background: linear-gradient(135deg, #3b82f6, #2563eb);
   color: #fff;
 }

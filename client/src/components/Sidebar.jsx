@@ -14,6 +14,8 @@ const PROMPTS = [
   { icon: CheckCircle, text: 'Show open Notion tasks' },
   { icon: AlertTriangle, text: 'Find overdue tasks' },
   { icon: BarChart, text: 'Full project briefing' },
+  { icon: Plus, text: 'Create meeting notes' },
+  { icon: Sun, text: 'Run Daily Notion Review' },
 ];
 import Skeleton from './Skeleton';
 

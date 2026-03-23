@@ -66,6 +66,31 @@ export const GEMINI_TOOLS = [
           },
           required: ["pageId"]
         }
+      },
+      {
+        name: "create_notion_page",
+        description: "Create a new Notion page (note or task) inside an existing page. Perfect for creating meeting notes, task lists, or project ideas.",
+        parameters: {
+          type: Type.OBJECT,
+          properties: {
+            parentPageId: { type: Type.STRING, description: "The ID of the parent page where the new page will be created." },
+            title: { type: Type.STRING, description: "The title of the new page." },
+            content: { type: Type.STRING, description: "(Optional) The initial text content for the page." }
+          },
+          required: ["parentPageId", "title"]
+        }
+      },
+      {
+        name: "update_notion_page",
+        description: "Update the properties of an existing Notion page or task. Use this to mark tasks as 'Done', change status, or update titles. Properties must follow the Notion API format.",
+        parameters: {
+          type: Type.OBJECT,
+          properties: {
+            pageId: { type: Type.STRING, description: "The ID of the page to update." },
+            properties: { type: Type.OBJECT, description: "The property object to update (e.g., { 'Status': { 'status': { 'name': 'Done' } } })." }
+          },
+          required: ["pageId", "properties"]
+        }
       }
     ]
   }

@@ -11,11 +11,8 @@ export async function getPageContent(pageId, token) {
   const notion = new Client({ auth: token });
   
   try {
-    // 1. Get page details (title)
     const page = await notion.pages.retrieve({ page_id: pageId });
     const title = extractTitle(page);
-    
-    // 2. Get blocks (content)
     const blocks = await notion.blocks.children.list({ block_id: pageId });
     let text = `Title: ${title}\n\nContent:\n`;
     
@@ -62,6 +59,7 @@ function extractTitle(page) {
   }
   return "Untitled Document";
 }
+
 /**
  * Searches for Notion pages by title
  * @param {string} query - The search query
@@ -93,5 +91,65 @@ export async function searchNotion(query, token) {
   } catch (err) {
     logger.error(`searchNotion Error [${query}]:`, err);
     throw new Error(`Failed to search Notion: ${err.message}`);
+  }
+}
+
+/**
+ * Creates a new Notion page
+ * @param {string} parentPageId - The ID of the parent page or database
+ * @param {string} title - The title of the new page
+ * @param {string} content - (Optional) Initial markdown/text content
+ * @param {string} token - The Notion integration token
+ */
+export async function createNotionPage(parentPageId, title, content, token) {
+  if (!token) throw new Error("Notion token is required for writing");
+  const notion = new Client({ auth: token });
+
+  try {
+    const response = await notion.pages.create({
+      parent: { page_id: parentPageId },
+      properties: {
+        title: [
+          { text: { content: title } }
+        ]
+      },
+      children: content ? [
+        {
+          object: 'block',
+          type: 'paragraph',
+          paragraph: {
+            rich_text: [{ text: { content: content } }]
+          }
+        }
+      ] : []
+    });
+
+    return { id: response.id, url: response.url };
+  } catch (err) {
+    logger.error(`createNotionPage Error:`, err);
+    throw new Error(`Failed to create Notion page: ${err.message}`);
+  }
+}
+
+/**
+ * Updates an existing Notion page's properties
+ * @param {string} pageId - The ID of the page to update
+ * @param {object} properties - The properties to update
+ * @param {string} token - The Notion integration token
+ */
+export async function updateNotionPage(pageId, properties, token) {
+  if (!token) throw new Error("Notion token is required for writing");
+  const notion = new Client({ auth: token });
+
+  try {
+    const response = await notion.pages.update({
+      page_id: pageId,
+      properties: properties
+    });
+
+    return { id: response.id, url: response.url };
+  } catch (err) {
+    logger.error(`updateNotionPage Error:`, err);
+    throw new Error(`Failed to update Notion page: ${err.message}`);
   }
 }

@@ -5,7 +5,7 @@ import { getAnthropicClient, BASE_SYSTEM } from '../services/anthropic.service.j
 import { getGeminiClient, BASE_SYSTEM_GEMINI, GEMINI_TOOLS } from '../services/gemini.service.js';
 import { buildMCPServers } from '../services/mcp.service.js';
 import { refreshGoogleAccessToken } from '../services/auth.service.js';
-import { getPageContent, searchNotion } from '../services/notion.service.js';
+import { getPageContent, searchNotion, createNotionPage, updateNotionPage } from '../services/notion.service.js';
 import { getUnreadEmails } from '../services/gmail.service.js';
 import { getCalendarEvents } from '../services/calendar.service.js';
 
@@ -205,6 +205,20 @@ router.post('/stream', async (req, res) => {
               }
             } else if (name === "get_notion_page") {
               toolResponse = notionToken ? await getPageContent(args.pageId, notionToken) : "Notion integrated not configured.";
+            } else if (name === "create_notion_page") {
+              if (!notionToken) {
+                toolResponse = "Notion integration not configured.";
+              } else {
+                const res = await createNotionPage(args.parentPageId, args.title, args.content, notionToken);
+                toolResponse = `Successfully created page: ${args.title}. URL: ${res.url}`;
+              }
+            } else if (name === "update_notion_page") {
+              if (!notionToken) {
+                toolResponse = "Notion integration not configured.";
+              } else {
+                const res = await updateNotionPage(args.pageId, args.properties, notionToken);
+                toolResponse = `Successfully updated page: ${args.pageId}. URL: ${res.url}`;
+              }
             }
 
             functionResponses.push({

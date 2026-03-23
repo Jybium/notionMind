@@ -20,16 +20,13 @@ router.post('/generate', async (req, res) => {
     const workspace = await prisma.workspace.findUnique({ where: { id: workspaceId } });
     const notionToken = workspace?.token || user.notionKey;
 
-    // Refresh Google token
-    const googleAccessToken = await refreshGoogleAccessToken(user.gmailToken);
-
     const anthropic = getAnthropicClient(user.anthropicKey);
-    const mcpServers = buildMCPServers(notionToken, googleAccessToken, googleAccessToken);
+    const mcpServers = buildMCPServers(notionToken, null, null);
 
     const response = await anthropic.beta.messages.create({
       model: 'claude-3-5-sonnet-20241022',
       max_tokens: 4096,
-      system: "You are a business analyst. Generate a comprehensive status report based on Notion tasks, recent emails, and calendar events.",
+      system: "You are a business analyst. Generate a comprehensive status report based on Notion tasks, projects, and workspace content.",
       messages: [{ role: 'user', content: 'Generate a full weekly status report.' }],
       betas: ['mcp-client-2025-04-04'],
       mcp_servers: mcpServers,

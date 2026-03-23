@@ -35,12 +35,7 @@ app.get('/api/commands', (req, res) => {
     { id: 'project-briefing', category: 'Notion',   icon: '📊', label: 'Full project briefing',         prompt: 'Give me a full status briefing on all active projects — status, blockers, next steps.' },
     { id: 'roadmap-summary',  category: 'Notion',   icon: '🗺️', label: 'Summarize Q2 roadmap',         prompt: 'Read and summarize the Q2 roadmap page. Highlight milestones and what is at risk.' },
     { id: 'create-notes',     category: 'Notion',   icon: '📝', label: 'Create meeting notes page',     prompt: 'Create a meeting notes page for today with sections: Attendees, Agenda, Decisions, Action Items.' },
-    { id: 'inbox-unread',     category: 'Gmail',    icon: '📬', label: 'Show unread emails',            prompt: 'Check my Gmail inbox and summarize the top 5 unread emails. Flag anything urgent.', gmail: true },
-    { id: 'email-followups',  category: 'Gmail',    icon: '↩️', label: 'Emails needing reply',          prompt: 'Find emails older than 2 days with no reply.', gmail: true },
-    { id: 'calendar-today',   category: 'Calendar', icon: '📅', label: 'Today\'s calendar',              prompt: 'What is on my calendar today? Include times and prep notes.', calendar: true },
-    { id: 'daily-briefing',   category: 'Agent',    icon: '☀️', label: 'Run daily briefing',            special: 'agent', agentGoal: 'Generate my daily briefing: check overdue Notion tasks, unread important emails, and today\'s calendar events. Give a prioritized morning brief.' },
-    { id: 'triage-backlog',   category: 'Agent',    icon: '🤖', label: 'Triage feature backlog',        special: 'agent', agentGoal: 'Go through the feature backlog database in Notion. For each unreviewed item, write a one-line assessment and suggest a priority: High, Medium, or Low. Update each item.' },
-    { id: 'sync-tasks-cal',   category: 'Agent',    icon: '🔄', label: 'Sync overdue tasks to calendar',special: 'agent', agentGoal: 'Find all overdue Notion tasks. For each, create a 1-hour Google Calendar event this week to work on it, then update the task status to Scheduled.' },
+    { id: 'daily-review',     category: 'Agent',    icon: '☀️', label: 'Daily Notion Review',           special: 'agent', agentGoal: 'Perform a comprehensive daily review of my Notion workspace. Find all pages edited in the last 24 hours, identify any overdue tasks, and provide a summary of active project status.' },
     { id: 'export-pdf',       category: 'Export',   icon: '📄', label: 'Export workspace report PDF',   special: 'pdf' },
   ];
   const lower = q.toLowerCase();
