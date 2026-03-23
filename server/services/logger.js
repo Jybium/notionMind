@@ -20,30 +20,18 @@ const consoleFormat = winston.format.combine(
   )
 );
 
-// Create the logger
+// Only use Console logging for production/serverless compatibility
+const transports = [
+  new winston.transports.Console({
+    format: consoleFormat
+  })
+];
+
 const logger = winston.createLogger({
   level: process.env.LOG_LEVEL || 'info',
   format: logFormat,
   defaultMeta: { service: 'notionmind-api' },
-  transports: [
-    // Write all logs with importance level of `error` or less to `error.log`
-    new winston.transports.File({ 
-      filename: path.join(LOG_DIR, 'error.log'), 
-      level: 'error',
-      maxsize: 5242880, // 5MB
-      maxFiles: 5,
-    }),
-    // Write all logs with importance level of `info` or less to `combined.log`
-    new winston.transports.File({ 
-      filename: path.join(LOG_DIR, 'combined.log'),
-      maxsize: 5242880, // 5MB
-      maxFiles: 5,
-    }),
-    // Always log to console
-    new winston.transports.Console({
-      format: consoleFormat
-    })
-  ],
+  transports: transports,
 });
 
 export default logger;
