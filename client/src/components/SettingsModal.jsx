@@ -160,7 +160,7 @@ export default function SettingsModal({ onClose, userId, showToast }) {
                 <div className="status-item-info">
                   <Mail size={16} />
                   <div>
-                    <div className="status-label">Google Identity & Gmail</div>
+                    <div className="status-label">Google Identity</div>
                     <div className="status-sub">
                       {loading ? <Skeleton width="140px" height="14px" /> : (user?.email || 'Not connected')}
                     </div>

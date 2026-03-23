@@ -10,16 +10,12 @@ import {
   Sun,
   Trash2
 } from 'lucide-react';
-import Skeleton from './Skeleton';
-
 const PROMPTS = [
   { icon: CheckCircle, text: 'Show open Notion tasks' },
   { icon: AlertTriangle, text: 'Find overdue tasks' },
   { icon: BarChart, text: 'Full project briefing' },
-  { icon: Mail, text: 'Summarize unread emails' },
-  { icon: Calendar, text: "Today's calendar" },
-  { icon: Sun, text: 'Run daily briefing' },
 ];
+import Skeleton from './Skeleton';
 
 export default function Sidebar({
   sessions = [],

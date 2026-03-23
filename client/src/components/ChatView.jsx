@@ -15,9 +15,8 @@ import './ChatView.css';
 
 const CHIPS = [
   'Show my open Notion tasks',
-  'Summarize my unread Gmail',
-  "What's on my calendar today?",
-  'Give me a daily briefing',
+  'Find overdue tasks',
+  'Give me a project briefing',
 ];
 
 const ChatView = ({

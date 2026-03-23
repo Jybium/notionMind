@@ -17,7 +17,7 @@ export default function App() {
   const [sessionId, setSessionId] = useState(localStorage.getItem('nm_session_id') || 'default');
   const [sessions, setSessions] = useState([]);
   const [mode, setMode] = useState(new URLSearchParams(window.location.search).get('mode') || 'chat');
-  const [modelProvider, setModelProvider] = useState(new URLSearchParams(window.location.search).get('model') || 'claude');
+  const [modelProvider, setModelProvider] = useState(new URLSearchParams(window.location.search).get('model') || 'gemini');
   const [useGmail, setUseGmail] = useState(false);
   const [useCalendar, setUseCalendar] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
@@ -59,6 +59,7 @@ export default function App() {
     const sId = params.get('session');
     const m = params.get('mode');
     const mp = params.get('model');
+    const d = params.get('doc');
 
     if (uId) {
       localStorage.setItem('nm_user_id', uId);
@@ -70,6 +71,11 @@ export default function App() {
     }
     if (m) setMode(m);
     if (mp) setModelProvider(mp);
+    if (d) {
+      const savedDoc = localStorage.getItem(`doc_${d}`);
+      if (savedDoc) setSelectedDoc(JSON.parse(savedDoc));
+      else setSelectedDoc({ id: d, title: 'Loading...' });
+    }
   }, []);
 
   // Sync state to URL
@@ -80,10 +86,16 @@ export default function App() {
     else params.delete('session');
     if (workspaceId) params.set('workspace', workspaceId);
     if (modelProvider) params.set('model', modelProvider);
+    if (selectedDoc) {
+      params.set('doc', selectedDoc.id);
+      localStorage.setItem(`doc_${selectedDoc.id}`, JSON.stringify(selectedDoc));
+    } else {
+      params.delete('doc');
+    }
 
     const newUrl = `${window.location.pathname}?${params.toString()}`;
     window.history.replaceState({}, '', newUrl);
-  }, [mode, sessionId, modelProvider]);
+  }, [mode, sessionId, modelProvider, selectedDoc]);
 
   useEffect(() => {
     if (userId) {

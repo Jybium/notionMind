@@ -37,6 +37,8 @@ export default function Header({
   setSelectedDoc,
 }) {
   const [showWS, setShowWS] = useState(false);
+  const [showModelDropdown, setShowModelDropdown] = useState(false);
+  const modelDropdownRef = useRef(null);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
@@ -57,6 +59,9 @@ export default function Header({
       }
       if (searchRef.current && !searchRef.current.contains(event.target)) {
         setIsSearchOpen(false);
+      }
+      if (modelDropdownRef.current && !modelDropdownRef.current.contains(event.target)) {
+        setShowModelDropdown(false);
       }
     }
     document.addEventListener("mousedown", handleClickOutside);
@@ -179,7 +184,7 @@ export default function Header({
 
       <div className="header-right">
         <div className="status-indicators">
-          <div
+          {/*          <div
             className={`status-pill ${useGmail ? 'active' : ''}`}
             onClick={() => setUseGmail(!useGmail)}
             title={useGmail ? 'Gmail Connected' : 'Gmail Off'}
@@ -192,19 +197,63 @@ export default function Header({
             title={useCalendar ? 'Calendar Connected' : 'Calendar Off'}
           >
             <Calendar size={14} />
-          </div>
+          </div> */}
 
           <div className="header-sep-tiny" />
 
-          <div
-            className="model-selector-pill"
-            onClick={() => setModelProvider(modelProvider === 'claude' ? 'gemini' : 'claude')}
-            title={`Current Model: ${modelProvider === 'claude' ? 'Claude 3.5' : 'Gemini 2.5'}`}
-          >
-            <div className={`${modelProvider}`}>
-              {modelProvider === 'claude' ? <Zap size={11} /> : <span>🧠</span>}
+          <div className="model-selector-container" ref={modelDropdownRef}>
+            <div
+              className={`model-selector-pill ${showModelDropdown ? 'open' : ''}`}
+              onClick={() => setShowModelDropdown(!showModelDropdown)}
+            >
+              <div className={`model-indicator ${modelProvider}`}>
+                {modelProvider === 'claude' ? <Zap size={11} /> : <span>🧠</span>}
+              </div>
+              <span className="model-name">
+                {modelProvider === 'claude' ? 'Claude 3.5' : 
+                 modelProvider === 'gemini-lite' ? 'Gemini 3.1 Lite' : 'Gemini 3.1 Pro'}
+              </span>
+              <ChevronDown size={12} className="model-chevron" />
             </div>
-            <span className="model-name">{modelProvider === 'claude' ? 'Claude' : 'Gemini'}</span>
+
+            {showModelDropdown && (
+              <div className="model-dropdown">
+                <div className="dropdown-label">Select Model</div>
+                <div
+                  className={`model-option ${modelProvider === 'gemini' ? 'active' : ''}`}
+                  onClick={() => { setModelProvider('gemini'); setShowModelDropdown(false); }}
+                >
+                  <div className="model-option-icon gemini">🧠</div>
+                  <div className="model-option-info">
+                    <div className="model-option-name">Gemini 3.1 Pro</div>
+                    <div className="model-option-desc">Most capable Gemini model</div>
+                  </div>
+                  {modelProvider === 'gemini' && <CheckCircle size={14} className="option-check" />}
+                </div>
+                <div
+                  className={`model-option ${modelProvider === 'gemini-lite' ? 'active' : ''}`}
+                  onClick={() => { setModelProvider('gemini-lite'); setShowModelDropdown(false); }}
+                >
+                  <div className="model-option-icon gemini" style={{opacity:0.8}}>⚡</div>
+                  <div className="model-option-info">
+                    <div className="model-option-name">Gemini 3.1 Flash Lite</div>
+                    <div className="model-option-desc">Fastest & most efficient</div>
+                  </div>
+                  {modelProvider === 'gemini-lite' && <CheckCircle size={14} className="option-check" />}
+                </div>
+                <div
+                  className={`model-option ${modelProvider === 'claude' ? 'active' : ''}`}
+                  onClick={() => { setModelProvider('claude'); setShowModelDropdown(false); }}
+                >
+                  <div className="model-option-icon claude"><Zap size={12} /></div>
+                  <div className="model-option-info">
+                    <div className="model-option-name">Claude 3.5 Sonnet</div>
+                    <div className="model-option-desc">Intelligent & reliable</div>
+                  </div>
+                  {modelProvider === 'claude' && <CheckCircle size={14} className="option-check" />}
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
@@ -214,9 +263,7 @@ export default function Header({
           <button className="icon-action" onClick={openSettings} title="Settings">
             <Settings size={18} />
           </button>
-          <button className="icon-action" title="Notifications">
-            <Bell size={18} />
-          </button>
+
         </div>
 
         <div className="user-profile">

@@ -107,7 +107,7 @@ router.post('/stream', async (req, res) => {
     send('connected', { ok: true });
 
     let fullReply = '';
-    let useProvider = provider === 'gemini' ? 'gemini' : 'claude';
+    let useProvider = provider?.startsWith('gemini') ? 'gemini' : 'claude';
     if (useProvider === 'claude' && !hasAnthropic) useProvider = 'gemini';
     if (useProvider === 'gemini' && !hasGemini) useProvider = 'claude';
 
@@ -146,7 +146,7 @@ router.post('/stream', async (req, res) => {
         history.push({ role: 'user', parts: [{ text: message }] });
 
         let reqArgs = {
-          model: 'gemini-3.1-pro-preview',
+          model: provider === 'gemini-lite' ? 'gemini-3.1-flash-lite' : 'gemini-3.1-pro-preview',
           contents: history,
           config: {
             systemInstruction: sysInst,
