@@ -32,6 +32,7 @@ export default function Header({
   sidebarOpen,
   setSidebarOpen,
   modelProvider,
+  setModelProvider,
   selectedDoc,
   setSelectedDoc,
 }) {
