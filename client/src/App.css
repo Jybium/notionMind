@@ -1,0 +1,202 @@
+/* ── App Layout ─────────────────────────────────── */
+.app-shell {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+.app-body {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* ── Sidebar ─────────────────────────────────────── */
+.sidebar {
+  width: 240px;
+  flex-shrink: 0;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  padding: 16px 10px;
+  gap: 4px;
+  overflow-y: auto;
+}
+
+.sidebar-section-title {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text4);
+  padding: 10px 10px 6px;
+}
+
+.sidebar-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: var(--r-md);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  font-size: 13.5px;
+  font-weight: 450;
+  color: var(--text2);
+}
+.sidebar-item:hover { background: var(--surface3); color: var(--text); }
+.sidebar-item.active { background: var(--brand-dim); color: var(--brand2); }
+.sidebar-item .icon { font-size: 15px; width: 20px; text-align: center; opacity: 0.8; }
+.sidebar-divider { height: 1px; background: var(--border); margin: 6px 4px; }
+
+.delete-session-btn {
+  padding: 4px;
+  border-radius: 4px;
+  color: var(--text4);
+  background: transparent;
+  display: flex;
+  opacity: 0;
+  transition: all 0.2s;
+}
+
+.sidebar-item:hover .delete-session-btn {
+  opacity: 1;
+}
+
+.delete-session-btn:hover {
+  background: var(--red-dim);
+  color: var(--red);
+}
+
+/* ── Main Content ─────────────────────────────────── */
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--bg);
+}
+
+/* ── Mode Tabs ────────────────────────────────────── */
+.mode-tabs {
+  display: flex;
+  gap: 4px;
+  padding: 0 20px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+}
+
+.mode-tab {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 13px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text3);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: color 0.2s, border-color 0.2s;
+  margin-bottom: -1px;
+}
+.mode-tab:hover { color: var(--text2); }
+.mode-tab.active { color: var(--brand2); border-bottom-color: var(--brand); }
+.mode-tab .tab-icon { font-size: 15px; }
+
+/* Active Document Badge in Tabs */
+.selected-doc-badge-tabs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+  align-self: center;
+  padding: 5px 12px;
+  background: var(--brand-dim);
+  border: 1px solid rgba(124, 110, 250, 0.2);
+  border-radius: var(--r-full);
+  animation: badgeIn 0.3s var(--ease);
+}
+
+.selected-doc-badge-tabs .icon-doc {
+  color: var(--brand);
+  opacity: 0.9;
+}
+
+.selected-doc-badge-tabs .doc-title {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text2);
+  max-width: 200px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.selected-doc-badge-tabs .close-doc-btn {
+  background: transparent;
+  border: none;
+  color: var(--text4);
+  cursor: pointer;
+  display: flex;
+  padding: 2px;
+  border-radius: 50%;
+  transition: all 0.2s;
+}
+
+.selected-doc-badge-tabs .close-doc-btn:hover {
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+@keyframes badgeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 768px) {
+  .selected-doc-badge-tabs .doc-title span {
+    display: none;
+  }
+}
+
+/* ── Mobile Layout ──────────────────────────────── */
+@media (max-width: 1024px) {
+  .sidebar {
+    position: fixed;
+    top: 64px;
+    bottom: 0;
+    left: 0;
+    width: 280px;
+    z-index: 900;
+    transform: translateX(-100%);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 20px 0 40px rgba(0, 0, 0, 0.4);
+    border-right: 1px solid var(--border2);
+  }
+
+  .sidebar-on .sidebar {
+    transform: translateX(0);
+  }
+
+  /* Overlay / Backdrop when sidebar is open */
+  .sidebar-on::after {
+    content: '';
+    position: fixed;
+    inset: 64px 0 0 0;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(4px);
+    z-index: 800;
+    animation: fadeIn 0.2s ease;
+  }
+
+  .mode-tabs {
+    padding: 0 16px;
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}

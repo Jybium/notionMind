@@ -1,0 +1,27 @@
+{
+  "name": "notionmind",
+  "version": "2.0.0",
+  "description": "AI workspace brain powered by Claude + Notion MCP",
+  "main": "server/index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server/index.js",
+    "dev": "node --watch server/index.js"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.36.0",
+    "@google/genai": "^1.46.0",
+    "@google/generative-ai": "^0.24.1",
+    "@notionhq/client": "^5.14.0",
+    "@prisma/client": "^5.22.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "node-cron": "^3.0.3",
+    "nodemailer": "^6.9.13",
+    "pdfkit": "^0.15.0",
+    "prisma": "^5.22.0",
+    "sqlite3": "^6.0.1",
+    "winston": "^3.19.0"
+  }
+}

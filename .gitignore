@@ -1,0 +1,9 @@
+node_modules/
+.env
+*.log
+.DS_Store
+.next/
+.next
+test-genai.js
+test-tools.js
+verify_prisma.js

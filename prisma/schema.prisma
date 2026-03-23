@@ -1,0 +1,83 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Workspace {
+  id        String    @id @default(uuid())
+  name      String
+  token     String?
+  notionId  String?   @unique
+  userId    String?
+  user      User?     @relation(fields: [userId], references: [id])
+  createdAt DateTime  @default(now())
+  sessions  Session[]
+}
+
+model User {
+  id            String      @id @default(uuid())
+  googleId      String?     @unique
+  name          String?
+  email         String?     @unique
+  profileImage  String?
+  anthropicKey  String?
+  geminiKey     String?
+  notionKey     String?     // Legacy/Default
+  gmailToken    String?     // Refresh Token for Google
+  calendarToken String?
+  tokenUsageGemini Int       @default(0)
+  tokenUsageClaude Int       @default(0)
+  tokenQuota       Int       @default(1000000) // Default 1M "units"
+  createdAt     DateTime    @default(now())
+  sessions      Session[]
+  workspaces    Workspace[]
+}
+
+model Session {
+  id          String    @id @default(uuid())
+  title       String?   // AI-generated summary
+  workspaceId String
+  userId      String?
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  user        User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @default(now()) @updatedAt
+  messages    Message[]
+  agentExecs  AgentExecution[]
+}
+
+model Message {
+  id        String   @id @default(uuid())
+  sessionId String
+  session   Session  @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  role      String   // "user" or "assistant"
+  content   String
+  createdAt DateTime @default(now())
+}
+
+model AgentExecution {
+  id          String      @id @default(uuid())
+  goal        String
+  workspaceId String      @default("ws1") // This should probably be linked to Workspace model, but instruction doesn't specify
+  sessionId   String?     // Added to link to Session
+  session     Session?    @relation(fields: [sessionId], references: [id], onDelete: SetNull) // Added to link to Session
+  status      String      @default("running") // "running", "completed", "error"
+  result      String?
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @default(now()) @updatedAt
+  steps       AgentStep[]
+}
+
+model AgentStep {
+  id               String         @id @default(uuid())
+  agentExecutionId String
+  execution        AgentExecution @relation(fields: [agentExecutionId], references: [id], onDelete: Cascade)
+  stepNum          Int
+  text             String?
+  toolCalls        String?        // JSON array of strings
+  createdAt        DateTime       @default(now())
+}
