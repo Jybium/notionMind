@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Settings, X, Zap, BarChart3, Info, Mail, Database, CheckCircle2 } from 'lucide-react';
+import { Settings, X, Zap, BarChart3, Info, Mail, Database, CheckCircle2, Sparkles } from 'lucide-react';
 import Skeleton from './Skeleton';
 import './SettingsModal.css';
 
-export default function SettingsModal({ onClose, userId, showToast }) {
+export default function SettingsModal({ onClose, userId, showToast, onRunTour }) {
   const [user, setUser] = useState(null);
   const [anthropicKey, setAnthropicKey] = useState('');
   const [geminiKey, setGeminiKey] = useState('');
@@ -154,7 +154,29 @@ export default function SettingsModal({ onClose, userId, showToast }) {
           </section>
 
           <section className="settings-section">
-            <h3><Database size={16} /> Integrations Status</h3>
+            <div className="settings-section-header">
+              <Info size={16} />
+              <h3>Help & Learning</h3>
+            </div>
+            <div className="status-item">
+              <div className="status-item-info">
+                <Sparkles size={16} />
+                <div>
+                  <div className="status-label">App Tour</div>
+                  <div className="status-sub">Re-run the guided introduction</div>
+                </div>
+              </div>
+              <button className="btn-status-action" onClick={onRunTour}>
+                Start Tour
+              </button>
+            </div>
+          </section>
+
+          <section className="settings-section">
+            <div className="settings-section-header">
+              <Database size={16} />
+              <h3>Integrations Status</h3>
+            </div>
             <div className="integration-status-list">
               <div className="status-item">
                 <div className="status-item-info">

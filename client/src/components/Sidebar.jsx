@@ -37,7 +37,7 @@ export default function Sidebar({
         <Plus size={18} /> New Chat
       </button>
 
-      <div className="sidebar-section-title">Quick Actions</div>
+      <div className="sidebar-section-title quick-actions-section">Quick Actions</div>
       {PROMPTS.map((p) => {
         const Icon = p.icon;
         return (

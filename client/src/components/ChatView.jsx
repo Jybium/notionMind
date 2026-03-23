@@ -281,7 +281,7 @@ const ChatView = ({
 
         <div className="chat-input-form">
           <button
-            className={`chat-doc-btn ${showPicker ? 'active' : ''}`}
+            className={`chat-doc-btn document-picker-trigger ${showPicker ? 'active' : ''}`}
             onClick={() => {
               if (pages.length === 0) {
                 showToast('No Notion documents found. Try syncing your workspace in Settings.', 'info');

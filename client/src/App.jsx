@@ -7,6 +7,7 @@ import AgentView from './components/AgentView.jsx';
 import SettingsModal from './components/SettingsModal.jsx';
 import Onboarding from './components/Onboarding.jsx';
 import Toast from './components/Toast.jsx';
+import TourGuide from './components/TourGuide.jsx';
 import './App.css';
 
 export default function App() {
@@ -27,7 +28,14 @@ export default function App() {
   const [toast, setToast] = useState(null);
   const [isSessionsLoading, setIsSessionsLoading] = useState(false);
   const [selectedDoc, setSelectedDoc] = useState(null);
+  const [showTour, setShowTour] = useState(false);
 
+  useEffect(() => {
+    // Check if tour should be shown (first time user)
+    if (userId && !localStorage.getItem('nm_tour_completed')) {
+      setShowTour(true);
+    }
+  }, [userId]);
   const handleDocumentSelect = (doc) => {
     setSelectedDoc(doc);
     if (doc) {
@@ -212,9 +220,13 @@ export default function App() {
 
       {settingsOpen && (
         <SettingsModal 
-          userId={userId} 
-          showToast={showToast}
           onClose={() => setSettingsOpen(false)} 
+          userId={userId} 
+          showToast={(m, t) => setToast({ message: m, type: t })} 
+          onRunTour={() => {
+            setSettingsOpen(false);
+            setShowTour(true);
+          }}
         />
       )}
 
@@ -304,6 +316,13 @@ export default function App() {
           type={toast.type} 
           onClose={() => setToast(null)} 
         />
+      )}
+
+      {showTour && (
+        <TourGuide onComplete={() => {
+          localStorage.setItem('nm_tour_completed', 'true');
+          setShowTour(false);
+        }} />
       )}
     </div>
   );
