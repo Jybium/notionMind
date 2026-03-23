@@ -153,3 +153,34 @@ export async function updateNotionPage(pageId, properties, token) {
     throw new Error(`Failed to update Notion page: ${err.message}`);
   }
 }
+
+/**
+ * Appends blocks (content) to an existing Notion page
+ * @param {string} blockId - The ID of the page or block to append to
+ * @param {string} content - The text content to append as a paragraph
+ * @param {string} token - The Notion integration token
+ */
+export async function appendNotionBlocks(blockId, content, token) {
+  if (!token) throw new Error("Notion token is required for writing");
+  const notion = new Client({ auth: token });
+
+  try {
+    const response = await notion.blocks.children.append({
+      block_id: blockId,
+      children: [
+        {
+          object: 'block',
+          type: 'paragraph',
+          paragraph: {
+            rich_text: [{ text: { content: content } }]
+          }
+        }
+      ]
+    });
+
+    return { success: true, count: response.results.length };
+  } catch (err) {
+    logger.error(`appendNotionBlocks Error:`, err);
+    throw new Error(`Failed to append content to Notion: ${err.message}`);
+  }
+}

@@ -223,7 +223,7 @@ export default function Header({
                   className={`model-option ${modelProvider === 'gemini' ? 'active' : ''}`}
                   onClick={() => { setModelProvider('gemini'); setShowModelDropdown(false); }}
                 >
-                  <div className=" gemini">🧠</div>
+                  <div className="model-option-icon gemini">🧠</div>
                   <div className="model-option-info">
                     <div className="model-option-name">Gemini 3.1 Pro</div>
                     <div className="model-option-desc">Most capable Gemini model</div>
@@ -234,7 +234,7 @@ export default function Header({
                   className={`model-option ${modelProvider === 'gemini-lite' ? 'active' : ''}`}
                   onClick={() => { setModelProvider('gemini-lite'); setShowModelDropdown(false); }}
                 >
-                  <div className=" gemini" style={{ opacity: 0.8 }}>⚡</div>
+                  <div className="" style={{ opacity: 0.8 }}>⚡</div>
                   <div className="model-option-info">
                     <div className="model-option-name">Gemini 3.1 Flash Lite</div>
                     <div className="model-option-desc">Fastest & most efficient</div>

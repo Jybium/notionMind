@@ -91,6 +91,18 @@ export const GEMINI_TOOLS = [
           },
           required: ["pageId", "properties"]
         }
+      },
+      {
+        name: "append_to_notion_page",
+        description: "Append new content (text/paragraphs) to an existing Notion page or block. Use this to add notes to existing documents.",
+        parameters: {
+          type: Type.OBJECT,
+          properties: {
+            pageId: { type: Type.STRING, description: "The ID of the page/block to append to." },
+            content: { type: Type.STRING, description: "The text content to add." }
+          },
+          required: ["pageId", "content"]
+        }
       }
     ]
   }
