@@ -56,10 +56,10 @@ router.get('/google/callback', async (req, res) => {
     }
 
     // Redirect back to frontend with the userId to set in localStorage
-    res.redirect(`http://localhost:5173/?userId=${user.id}`);
+    res.redirect(`/?userId=${user.id}`);
   } catch (err) {
     console.error('Google Auth Error:', err);
-    res.redirect(`http://localhost:5173/?error=${encodeURIComponent(err.message)}`);
+    res.redirect(`/?error=${encodeURIComponent(err.message)}`);
   }
 });
 
@@ -104,10 +104,10 @@ router.get('/notion/callback', async (req, res) => {
       });
     }
 
-    res.redirect(`http://localhost:5173/?notion_connected=true`);
+    res.redirect(`/?notion_connected=true`);
   } catch (err) {
     console.error('Notion Auth Error:', err);
-    res.redirect(`http://localhost:5173/?error=${encodeURIComponent(err.message)}`);
+    res.redirect(`/?error=${encodeURIComponent(err.message)}`);
   }
 });
 
